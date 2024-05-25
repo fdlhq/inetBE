@@ -8,11 +8,9 @@ import { responseError } from "../error/responseError.js";
 const createOrder = async (orderData) => {
   const { value, error } = orderValidation.validate(orderData);
   if (error) {
-    console.log(error);
     throw new responseError(400, "1", error.details[0].message);
   }
   try {
-    console.log("ini", value);
     const createdOrder = await prismaClient.order.create({
       data: value,
     });
@@ -35,7 +33,6 @@ const createOrder = async (orderData) => {
 const updateOrder = async (orderData) => {
   const { value, error } = updateOrderValidation.validate(orderData);
   if (error) {
-    console.log(error);
     throw new responseError(400, "1", error.details[0].message);
   }
   try {
@@ -56,7 +53,6 @@ const updateOrder = async (orderData) => {
     };
     return responseData;
   } catch (error) {
-    console.log(error);
     throw new responseError(500, "2", "Internal Server Error");
   }
 };
