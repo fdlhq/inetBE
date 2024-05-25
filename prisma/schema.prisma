@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  password String
+  role     Role      @default(CUSTOMER)
+  Orders   Order[] 
+}
+
+model Teknisi {
+  id             Int    @id @default(autoincrement())
+  nama           String
+  nip            String    
+  no_telp        String    
+  Orders         Order[]
+}
+
+model Order {
+  id             Int     @id @default(autoincrement())
+  nama           String
+  email          String
+  upload_identity String
+  kota           String
+  kecamatan      String
+  jalan          String
+  user_id        Int
+  package_id     Int
+  status_id      Int     @default(1)
+  teknisi_id     Int?   
+  User           User    @relation(fields: [user_id], references: [id])
+  Package        Package @relation(fields: [package_id], references: [id])
+  Teknisi        Teknisi? @relation(fields: [teknisi_id], references: [id])
+  reject_reason    String?
+}
+
+model Package {
+  id              Int     @id @default(autoincrement())
+  nama            String
+  harga           String
+  deskripsi       String
+  Orders          Order[]
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
